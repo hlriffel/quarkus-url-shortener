@@ -1,0 +1,14 @@
+quarkus:
+  banner:
+    enabled: false
+  datasource:
+    db-kind: postgresql
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
+    jdbc:
+      url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}
+  hibernate-orm:
+    database:
+      generation: drop-and-create
+  redis:
+    hosts: ${REDIS_HOST}:${REDIS_PORT}

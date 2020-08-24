@@ -5,7 +5,9 @@ import io.quarkus.redis.client.RedisClient;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.ws.rs.WebApplicationException;
 import java.util.Arrays;
+import java.util.Optional;
 
 @ApplicationScoped
 @Transactional(Transactional.TxType.REQUIRED)
@@ -46,7 +48,9 @@ public class UrlShortenerService {
         if (redisClient.exists(Arrays.asList(shortenedUrl)).toBoolean()) {
             originalUrl = redisClient.get(shortenedUrl).toString();
         } else {
-            final ShortenedUrl url = repository.findByShortenedUrl(shortenedUrl);
+            final Optional<ShortenedUrl> optionalUrl = Optional.ofNullable(repository.findByShortenedUrl(shortenedUrl));
+            final ShortenedUrl url = optionalUrl.orElseThrow(WebApplicationException::new);
+
             originalUrl = url.getOriginalUrl();
 
             redisClient.set(Arrays.asList(url.getShortenedUrl(), url.getOriginalUrl()));

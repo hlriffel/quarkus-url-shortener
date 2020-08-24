@@ -24,8 +24,12 @@ public class UrlShortenerResource {
     @GET
     @Path("/{shortenedUrl}")
     public Response redirectToOriginalUrl(@PathParam("shortenedUrl") final String shortenedUrl) {
-        final String originalUrl = urlShortenerService.getOriginalUrl(shortenedUrl);
+        try {
+            final String originalUrl = urlShortenerService.getOriginalUrl(shortenedUrl);
 
-        return Response.status(Response.Status.FOUND).location(URI.create(originalUrl)).build();
+            return Response.status(Response.Status.FOUND).location(URI.create(originalUrl)).build();
+        } catch (final WebApplicationException ex) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
     }
 }

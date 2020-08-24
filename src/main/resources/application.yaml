@@ -12,3 +12,6 @@ quarkus:
       generation: drop-and-create
   redis:
     hosts: ${REDIS_HOST}:${REDIS_PORT}
+  swagger-ui:
+    always-include: true
+    path: /docs
